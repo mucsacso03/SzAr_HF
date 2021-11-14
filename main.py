@@ -1,5 +1,5 @@
 import json
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Api, Resource
 from random import randint
 
@@ -93,8 +93,12 @@ class game_instance1():
 
 
 class move(Resource):
-    def post(self, y, x):
-        global G
+    def post(self):
+        content = request.get_json()
+        x = content['x']
+        y = content['y']
+        # global G TODO: ide ez kéne, csak jelenleg nincs elmentve az állapot
+        G = game_instance1()
         victory = G.move(x, y)
         if victory:
             return {'jatekos': 'nyert'}
@@ -109,8 +113,8 @@ class newgame(Resource):
         return json.dumps(G.get_field())
 
 
-api.add_resource(move, "/move/<int:x>/<int:y>")
-api.add_resource(newgame, "/newgame/")
+api.add_resource(move, "/move")
+api.add_resource(newgame, "/newgame")
 
 if __name__ == '__main__':
     app.run(debug=True)
