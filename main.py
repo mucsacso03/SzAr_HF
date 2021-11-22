@@ -1,11 +1,13 @@
 import json
+import string
+from random import SystemRandom
+
 from flask import Flask, request
 from flask_restful import Api, Resource
-from random import randint
 
-import numpy as np
-
+from datab.database import Leaderboard_Entry
 from datab.shared import db
+from game import game_instance
 
 app = Flask(__name__)
 api = Api(app)
@@ -18,83 +20,69 @@ db.init_app(app)
 db.drop_all()
 db.create_all()
 
-P = 10
-WIDTH = P  # x
-HEIGHT = P  # y
-
-G = None
+Games = []
 
 
-class game_instance1():
+def delete_game_instance(id):
+    try:
+        G = [x for x in Games if x.id == id][0]
+        print(Games)
+        Games.remove(G)
+        print(Games)
 
-    def __init__(self):
-        self.field = np.zeros((WIDTH, HEIGHT), dtype=int)
-
-    def get_field(self):
-        return self.field.tolist()
-
-    def robot_move(self):
-        moved = True
-        while moved:
-            indexH = randint(0, HEIGHT - 1)
-            indexW = randint(0, WIDTH - 1)
-            if self.field[indexH, indexW] == 0:
-                self.field[indexH, indexW] = 2
-                moved = False
-
-    def move(self, x, y, user=1):
-        x -= 1
-        y -= 1
-        if 0 <= x < WIDTH and 0 <= y < HEIGHT and self.field[y, x] == 0:
-            self.field[y, x] = user
-            self.robot_move()
-            return self.check_victory()
-
-    def check_victory(self):
-        list_of_angles = [self.field[::-1, :].diagonal(i) for i in range(-self.field.shape[0] + 1, self.field.shape[1])]
-        list_of_angles.extend(self.field.diagonal(i) for i in range(self.field.shape[1] - 1, -self.field.shape[0], -1))
-
-        for r in range(0, HEIGHT):
-            list_of_angles.append(self.field[r, :])
-        for c in range(0, WIDTH):
-            list_of_angles.append(self.field[:, c])
-
-        victory = False
-        sublist = [1, 1]
-        for m in list_of_angles:
-            w = m.tolist()
-            for idx in range(len(w) - len(sublist) + 1):
-                if w[idx: idx + len(sublist)] == sublist:
-                    victory = True
-                    print('Victory:', victory)
-                    break
-
-        return victory
+    except Exception as e:
+        print(e)
 
 
-class move(Resource):
+class DeleteGame(Resource):
     def post(self):
         content = request.get_json()
-        x = content['x']
-        y = content['y']
-        # global G TODO: ide ez kéne, csak jelenleg nincs elmentve az állapot
-        G = game_instance1()
-        victory = G.move(x, y)
-        if victory:
-            return {'jatekos': 'nyert'}
-        else:
-            return json.dumps(G.get_field())
+        id = content['id']
+        delete_game_instance(id)
+        return str(200)
 
 
-class newgame(Resource):
+class Leaderboard(Resource):
+    def get(self):
+        return str(Leaderboard_Entry.query.all())
+
+
+class Move(Resource):
     def post(self):
-        global G
-        G = game_instance1()
-        return json.dumps(G.get_field())
+        content = request.get_json()
+        x = int(content['x'])
+        y = int(content['y'])
+        id = int(content['id'])
+        try:
+            G = [x for x in Games if x.id == id][0]
+            victory = G.move(x, y)
+            if victory:
+                username = G.username
+                delete_game_instance(id)
+                return {username: 'won'}
+            else:
+                print(G.get_field())
+                # return json.dumps(G.get_field())
+                return str("next move")
+        except Exception as e:
+            print(e)
+            return str(404)
 
 
-api.add_resource(move, "/move")
-api.add_resource(newgame, "/newgame")
+class NewGame(Resource):
+    def post(self):
+        content = request.get_json()
+        username = content['username']
+        global Games
+        id = ''.join(SystemRandom().choice(string.digits) for _ in range(2))
+        # id = 123  # TODO: only for debug
+        Games.append(game_instance(int(id), username))
+        return json.dumps(int(id))
+
+
+api.add_resource(Move, "/move")
+api.add_resource(NewGame, "/newgame")
+api.add_resource(Leaderboard, "/leaderboard")
 
 if __name__ == '__main__':
     app.run(debug=True)
