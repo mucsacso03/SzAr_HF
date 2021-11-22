@@ -1,49 +1,29 @@
 import json
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Api, Resource
 from random import randint
 
 import numpy as np
 
+from datab.shared import db
+
 app = Flask(__name__)
 api = Api(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+# db = SQLAlchemy(app)
+db.app = app
+db.init_app(app)
+
+db.drop_all()
+db.create_all()
 
 P = 10
 WIDTH = P  # x
 HEIGHT = P  # y
 
 G = None
-'''
-class game_instance():
 
-    def __init__(self):
-        self.field = []
-        for i in range(WIDTH):
-            for j in range(HEIGHT):
-                self.field.append('E')
-
-    def get_field(self):
-        return self.field
-
-    def robot_move(self):
-        moved = True
-        while moved:
-            index = randint(0,HEIGHT) * HEIGHT + randint(0,WIDTH)
-            if self.field[index] == 'E':
-                self.field[index] = 'O'
-                moved = False
-
-    def move(self, x, y, user = 'X'):
-        x -= 1
-        y -= 1
-        if 0 <= x < WIDTH and 0 <= y < HEIGHT and self.field[y * HEIGHT + x] == 'E':
-            self.field[y * HEIGHT + x] = user
-
-            self.robot_move()
-
-    def check_victory(self):
-        pass
-'''
 
 class game_instance1():
 
@@ -93,8 +73,12 @@ class game_instance1():
 
 
 class move(Resource):
-    def post(self, y, x):
-        global G
+    def post(self):
+        content = request.get_json()
+        x = content['x']
+        y = content['y']
+        # global G TODO: ide ez kéne, csak jelenleg nincs elmentve az állapot
+        G = game_instance1()
         victory = G.move(x, y)
         if victory:
             return {'jatekos': 'nyert'}
@@ -109,8 +93,8 @@ class newgame(Resource):
         return json.dumps(G.get_field())
 
 
-api.add_resource(move, "/move/<int:x>/<int:y>")
-api.add_resource(newgame, "/newgame/")
+api.add_resource(move, "/move")
+api.add_resource(newgame, "/newgame")
 
 if __name__ == '__main__':
     app.run(debug=True)
