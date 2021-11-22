@@ -55,11 +55,14 @@ class Move(Resource):
         id = int(content['id'])
         try:
             G = [x for x in Games if x.id == id][0]
-            victory = G.move(x, y)
+            victory, robot_v = G.move(x, y)
             if victory:
                 username = G.username
                 delete_game_instance(id)
                 return {username: 'won'}
+            elif robot_v:
+                delete_game_instance(id)
+                return {'robot: won'}
             else:
                 print(G.get_field())
                 # return json.dumps(G.get_field())

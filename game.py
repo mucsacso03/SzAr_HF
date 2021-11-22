@@ -32,10 +32,9 @@ class game_instance():
         if 0 <= x < WIDTH and 0 <= y < HEIGHT and self.field[y, x] == 0:
             self.field[y, x] = user
             self.step_counter += 1
-            victory = self.check_victory()
-            if not victory:
-                self.robot_move()
-            return victory
+            self.robot_move()
+            victory, robot_v = self.check_victory()
+            return victory, robot_v
 
     def check_victory(self):
         list_of_angles = [self.field[::-1, :].diagonal(i) for i in range(-self.field.shape[0] + 1, self.field.shape[1])]
@@ -46,21 +45,29 @@ class game_instance():
         for c in range(0, WIDTH):
             list_of_angles.append(self.field[:, c])
 
-        victory = False
-        sublist = [1, 1]
-        for m in list_of_angles:
-            w = m.tolist()
-            for idx in range(len(w) - len(sublist) + 1):
-                if w[idx: idx + len(sublist)] == sublist:
-                    victory = True
-                    print('Victory:', victory)
-                    break
+        sublist = [1, 1]  # TODO: 5 db 1esre visszairni
+        victory = check_grid(sublist, list_of_angles)
+        sublist = [2, 2, 2, 2, 2]
+        robot_victory = check_grid(sublist, list_of_angles)
+
         if victory:
-            entry = Leaderboard_Entry(username=self.username, score= self.step_counter)
+            entry = Leaderboard_Entry(username=self.username, score=self.step_counter)
             db.session.add(entry)
             db.session.commit()
 
-        return victory
+        return victory, robot_victory
+
+
+def check_grid(sublist, list_of_angles):
+    victory = False
+    for m in list_of_angles:
+        w = m.tolist()
+        for idx in range(len(w) - len(sublist) + 1):
+            if w[idx: idx + len(sublist)] == sublist:
+                victory = True
+                print('Victory:', victory)
+                break
+    return victory
 
 
 P = 10
