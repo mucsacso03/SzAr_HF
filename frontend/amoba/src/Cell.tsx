@@ -6,7 +6,7 @@ type CellProps = {
     y: number,
     key: number,
     actValue: number,
-    // onClick: () => void
+    onClick: () => void
 }
 
 type CellState = {
@@ -35,7 +35,7 @@ export default class Cell extends Component<CellProps, CellState>{
     render(){
         return (
             // <button className="cell" onClick={() => this.click(2)}>
-            <button className="cell" onClick={this.click}>
+            <button className="cell" onClick={this.props.onClick}>
                 {this.props.actValue}
             </button>
         )
