@@ -55,11 +55,11 @@ export default class Board extends Component<BoardProps, BoardState> {
     }
 
     // getBoard(x: number, y:number, id: number) {
-    move() {
+    move(x:number, y:number) {
         console.log("MOVE")
         var raw = JSON.stringify({
-            "x": 5,
-            "y": 10,
+            "x": x,
+            "y": y,
             "id": "123"
         });
 
@@ -74,7 +74,7 @@ export default class Board extends Component<BoardProps, BoardState> {
 
         fetch('/move', requestOptions)
             .then(data => data.json())
-            .then(success => console.log(success))
+            .then(success => this.refreshBoard(success))
             .catch(error => console.log('error', error));
     }
 
@@ -86,6 +86,7 @@ export default class Board extends Component<BoardProps, BoardState> {
     // }
 
     render() {
+        console.log("RENDER");
         if (this.state.actBoard.length === 0) {
             return "Not loaded yet";
         }
@@ -96,8 +97,8 @@ export default class Board extends Component<BoardProps, BoardState> {
             for (let x = 0; x < this.numRows; x++) {
                 // row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue="O" onClick={this.getBoard(x,y)}/>)
                 // row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue="O" onClick={() => this.testt(x,y)}></Cell>)
-                row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue={this.state.actBoard[x][y]}
-                onClick={this.move}></Cell>)
+                row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue={this.state.actBoard[y][x]}
+                onClick={() => this.move(x+1,y+1)}></Cell>)
             }
             cells.push(<div key={y}>{row}</div>)
 

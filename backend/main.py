@@ -30,9 +30,9 @@ Games = []
 def delete_game_instance(id):
     try:
         G = [x for x in Games if x.id == id][0]
-        print(Games)
+        # print(Games)
         Games.remove(G)
-        print(Games)
+        # print(Games)  
 
     except Exception as e:
         print(e)
@@ -59,6 +59,9 @@ class Move(Resource):
             y = int(content['y'])
             id = int(content['id'])
 
+            print("REQUEST:")
+            print(request.get_json())
+
             G = [x for x in Games if x.id == id][0]
             victory, robot_v = G.move(x, y)
             if victory:
@@ -69,10 +72,11 @@ class Move(Resource):
                 delete_game_instance(id)
                 return {'robot: won'}
             else:
-                print(G.get_field())
+                return G.get_field()
                 return json.dumps(G.get_field())
                 return str("next move")
         except Exception as e:
+            print("ERROR")
             print(e)
             # return e TODO: only for debug
             return str(404)
@@ -83,13 +87,14 @@ class NewGame(Resource):
         content = request.get_json()
         username = content['username']
         global Games
-        id = ''.join(SystemRandom().choice(string.digits) for _ in range(2))
-        # id = 123  # TODO: only for debug
+        # id = ''.join(SystemRandom().choice(string.digits) for _ in range(2))
+        id = 123  # TODO: only for debug
         Games.append(game_instance(int(id), username))
 
         # Itt is vissszaküldjük a pályát, hogy egyszerűbb dolgunk legyen
         G = [x for x in Games if x.id == id][0]
-        return json.dumps(G.get_field())
+        return(G.get_field())
+        # return json.dumps({"data" : G.get_field()})
         return json.dumps(int(id)) # ezt is, meg a fentit is kéne
 
 
