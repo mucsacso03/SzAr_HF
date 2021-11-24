@@ -8,8 +8,11 @@ from flask_restful import Api, Resource
 from datab.database import Leaderboard_Entry
 from datab.shared import db
 from game import game_instance
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app)
 api = Api(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -65,7 +68,7 @@ class Move(Resource):
                 return {'robot: won'}
             else:
                 print(G.get_field())
-                # return json.dumps(G.get_field())
+                return json.dumps(G.get_field())
                 return str("next move")
         except Exception as e:
             print(e)
