@@ -70,6 +70,6 @@ def check_grid(sublist, list_of_angles):
     return victory
 
 
-P = 10
+P = 19
 WIDTH = P  # x
 HEIGHT = P  # y

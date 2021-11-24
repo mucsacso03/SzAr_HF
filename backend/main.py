@@ -11,7 +11,8 @@ from game import game_instance
 from flask_cors import CORS
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+cors = CORS(app)
+# cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 CORS(app)
 api = Api(app)
 
@@ -52,11 +53,12 @@ class Leaderboard(Resource):
 
 class Move(Resource):
     def post(self):
-        content = request.get_json()
-        x = int(content['x'])
-        y = int(content['y'])
-        id = int(content['id'])
         try:
+            content = request.get_json()
+            x = int(content['x'])
+            y = int(content['y'])
+            id = int(content['id'])
+
             G = [x for x in Games if x.id == id][0]
             victory, robot_v = G.move(x, y)
             if victory:
@@ -83,6 +85,10 @@ class NewGame(Resource):
         id = ''.join(SystemRandom().choice(string.digits) for _ in range(2))
         # id = 123  # TODO: only for debug
         Games.append(game_instance(int(id), username))
+
+        # Itt is vissszaküldjük a pályát, hogy egyszerűbb dolgunk legyen
+        G = [x for x in Games if x.id == id][0]
+        return(G.get_field())
         return json.dumps(int(id))
 
 
