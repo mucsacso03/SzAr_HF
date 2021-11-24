@@ -1,9 +1,9 @@
 import './App.css';
-import Cells from './Board';
+import Board from './Board';
 
 function App() {
   return (
-    <Cells />
+    <Board />
   );
 }
 
