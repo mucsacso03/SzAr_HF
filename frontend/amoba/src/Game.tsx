@@ -104,7 +104,7 @@ export default class Board extends Component<BoardProps, BoardState> {
 
         }
         return (
-            <div className="board">
+            <div className="game">
                 {cells}
             </div>
         )
