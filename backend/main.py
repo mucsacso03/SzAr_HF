@@ -74,6 +74,7 @@ class Move(Resource):
                 return str("next move")
         except Exception as e:
             print(e)
+            # return e TODO: only for debug
             return str(404)
 
 
@@ -88,8 +89,8 @@ class NewGame(Resource):
 
         # Itt is vissszaküldjük a pályát, hogy egyszerűbb dolgunk legyen
         G = [x for x in Games if x.id == id][0]
-        return(G.get_field())
-        return json.dumps(int(id))
+        return json.dumps(G.get_field())
+        return json.dumps(int(id)) # ezt is, meg a fentit is kéne
 
 
 api.add_resource(Move, "/move")
