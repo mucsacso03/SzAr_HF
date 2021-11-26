@@ -2,7 +2,7 @@ import json
 import string
 from random import SystemRandom
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import Api, Resource
 
 from datab.database import Leaderboard_Entry
@@ -67,14 +67,15 @@ class Move(Resource):
             if victory:
                 username = G.username
                 delete_game_instance(id)
-                return {username: 'won'}
+                return jsonify({"won": username})
+
             elif robot_v:
                 delete_game_instance(id)
-                return {'robot: won'}
+                return jsonify({"won": 'robot'})
             else:
-                return G.get_field()
-                return json.dumps(G.get_field())
-                return str("next move")
+                return jsonify({'won': '',
+                'field': G.get_field()})
+
         except Exception as e:
             print("ERROR")
             print(e)

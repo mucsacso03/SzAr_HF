@@ -1,12 +1,16 @@
+import { Typography } from '@material-ui/core';
 import React, { Component } from 'react'
 import Cell from './Cell'
 
 
 
-type BoardProps = {};
+type BoardProps = {
+    username: string;
+};
 
 type BoardState = {
     actBoard: number[][];
+    winner: string
 };
 
 
@@ -15,7 +19,7 @@ export default class Board extends Component<BoardProps, BoardState> {
 
     constructor(props: BoardProps) {
         super(props);
-        this.state = { actBoard: [] };
+        this.state = { actBoard: [], winner: "" };
     }
 
     componentDidMount() {
@@ -26,17 +30,36 @@ export default class Board extends Component<BoardProps, BoardState> {
         return y * this.numRows + x;
     }
 
-    refreshBoard = (refreshedBoard: number[][]): void => {
-        console.log("REFRESH")
-        console.log(refreshedBoard);
-        this.setState({ actBoard: refreshedBoard });
+    victory = (name:string) =>{
+        this.setState({ winner: name });
+    }
+
+    // refreshBoard = (refreshedBoard: number[][]): void => {
+    refreshBoard = (refreshedBoard: number[][], won =""): void => {
+        console.log('WON:')
+        console.log(won)
+        console.log("refreshboard:")
+        console.log(refreshedBoard)
+        if(!refreshedBoard){
+            if (won ===this.props.username){
+                this.victory(this.props.username);
+            }
+            else if(won === 'robot'){
+                this.victory('robot')
+            }
+        }
+        else{
+            this.setState({ actBoard: refreshedBoard });
+        }
+      
+
     }
 
 
     newGame() {
         console.log("NEWGAME")
         var raw = JSON.stringify({
-            "username": "valami"
+            "username": this.props.username
         });
 
         var requestOptions: RequestInit = {
@@ -55,7 +78,7 @@ export default class Board extends Component<BoardProps, BoardState> {
     }
 
     // getBoard(x: number, y:number, id: number) {
-    move(x:number, y:number) {
+    move(x: number, y: number) {
         console.log("MOVE")
         var raw = JSON.stringify({
             "x": x,
@@ -74,21 +97,23 @@ export default class Board extends Component<BoardProps, BoardState> {
 
         fetch('/move', requestOptions)
             .then(data => data.json())
-            .then(success => this.refreshBoard(success))
+            .then(success => this.refreshBoard(success['field'], success['won']))
             .catch(error => console.log('error', error));
     }
 
-
-    // refreshBoard(refreshedBoard: number[][]) {
-    //     console.log("REFRESH")
-    //     console.log(refreshedBoard);
-    //     this.setState({ actBoard: refreshedBoard });
-    // }
 
     render() {
         console.log("RENDER");
         if (this.state.actBoard.length === 0) {
             return "Not loaded yet";
+        }
+        if(this.state.winner !== ""){
+            return (
+                <div className="game">
+                    <Typography variant="h2">{this.state.winner} wins</Typography>
+                    
+                </div>
+            )
         }
         console.log(Object.values(this.state.actBoard[1])[1]);
         let cells = [];
@@ -98,7 +123,7 @@ export default class Board extends Component<BoardProps, BoardState> {
                 // row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue="O" onClick={this.getBoard(x,y)}/>)
                 // row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue="O" onClick={() => this.testt(x,y)}></Cell>)
                 row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue={this.state.actBoard[y][x]}
-                onClick={() => this.move(x+1,y+1)}></Cell>)
+                    onClick={() => this.move(x + 1, y + 1)}></Cell>)
             }
             cells.push(<div key={y}>{row}</div>)
 
