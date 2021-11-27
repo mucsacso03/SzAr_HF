@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Navbar from './Navbar';
 import Score from './Score';
-import ScoreData from './ScoreData';
 
 type LeaderboardProps = {
     id: number,
