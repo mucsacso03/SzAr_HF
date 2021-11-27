@@ -1,3 +1,5 @@
+import datetime as dt
+from datetime import datetime
 from random import randint
 
 import numpy as np
@@ -13,6 +15,7 @@ class game_instance():
         self.id = id
         self.username = username
         self.step_counter = 0
+        self.delete_time = datetime.now() + dt.timedelta(minutes=15)
 
     def get_field(self):
         return self.field.tolist()
@@ -27,6 +30,8 @@ class game_instance():
                 moved = False
 
     def move(self, x, y, user=1):
+        self.delete_time = datetime.now() + dt.timedelta(minutes=15)
+
         x -= 1
         y -= 1
         if 0 <= x < WIDTH and 0 <= y < HEIGHT and self.field[y, x] == 0:

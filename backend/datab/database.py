@@ -1,4 +1,5 @@
-from datab.shared import db
+from backend.datab.shared import db
+
 
 class Leaderboard_Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
