@@ -1,4 +1,8 @@
 import json
+import threading
+import time
+from datetime import datetime
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_restful import Api, Resource
@@ -24,23 +28,47 @@ db.create_all()
 Games = []
 
 
+def find_game_in_games_list(id):
+    try:
+        return [x for x in Games if x.id == id][0]
+    except:
+        return None
+
+
 def delete_game_instance(id):
     try:
-        G = [x for x in Games if x.id == id][0]
+        g = find_game_in_games_list(id)
         # print(Games)
-        Games.remove(G)
+        Games.remove(g)
         # print(Games)
 
     except Exception as e:
         print(e)
 
 
-class DeleteGame(Resource):
-    def post(self):
-        content = request.get_json()
-        id = content['id']
+def delete_inactive_game(id):
+    g = find_game_in_games_list(id)
+    if g is None:
+        return True
+    if datetime.now() > g.delete_time:
         delete_game_instance(id)
-        return str(200)
+        return True
+    else:
+
+        return False
+
+
+def game_deleting_thread(id):
+    while not delete_inactive_game(id):
+        time.sleep(5)
+
+
+# class DeleteGame(Resource):
+#     def post(self):
+#         content = request.get_json()
+#         id = content['id']
+#         delete_game_instance(id)
+#         return str(200)
 
 
 class Leaderboard(Resource):
@@ -99,10 +127,12 @@ class NewGame(Resource):
         id = 123  # TODO: only for debug
         Games.append(game_instance(int(id), username))
 
+        threading.Thread(target=game_deleting_thread, args=[id], daemon=True).start()
+
         # Itt is vissszaküldjük a pályát, hogy egyszerűbb dolgunk legyen
-        G = [x for x in Games if x.id == id][0]
-        return(G.get_field())
-        # return json.dumps({"data" : G.get_field()})
+        game = [x for x in Games if x.id == id][0]
+        return (game.get_field())
+        # return json.dumps({"data" : game.get_field()})
         return json.dumps(int(id))  # ezt is, meg a fentit is kéne
 
 
