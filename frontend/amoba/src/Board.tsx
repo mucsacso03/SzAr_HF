@@ -30,28 +30,28 @@ export default class Board extends Component<BoardProps, BoardState> {
         return y * this.numRows + x;
     }
 
-    victory = (name:string) =>{
+    victory = (name: string) => {
         this.setState({ winner: name });
     }
 
     // refreshBoard = (refreshedBoard: number[][]): void => {
-    refreshBoard = (refreshedBoard: number[][], won =""): void => {
+    refreshBoard = (refreshedBoard: number[][], won = ""): void => {
         console.log('WON:')
         console.log(won)
         console.log("refreshboard:")
         console.log(refreshedBoard)
-        if(!refreshedBoard){
-            if (won ===this.props.username){
+        if (!refreshedBoard) {
+            if (won === this.props.username) {
                 this.victory(this.props.username);
             }
-            else if(won === 'robot'){
+            else if (won === 'robot') {
                 this.victory('robot')
             }
         }
-        else{
+        else {
             this.setState({ actBoard: refreshedBoard });
         }
-      
+
 
     }
 
@@ -103,25 +103,21 @@ export default class Board extends Component<BoardProps, BoardState> {
 
 
     render() {
-        console.log("RENDER");
         if (this.state.actBoard.length === 0) {
-            return "Not loaded yet";
+            return "Loading...";
         }
-        if(this.state.winner !== ""){
+        if (this.state.winner !== "") {
             return (
                 <div className="game">
                     <Typography variant="h2">{this.state.winner} wins</Typography>
-                    
+
                 </div>
             )
         }
-        console.log(Object.values(this.state.actBoard[1])[1]);
         let cells = [];
         for (let y = 0; y < this.numRows; y++) {
             let row = []
             for (let x = 0; x < this.numRows; x++) {
-                // row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue="O" onClick={this.getBoard(x,y)}/>)
-                // row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue="O" onClick={() => this.testt(x,y)}></Cell>)
                 row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue={this.state.actBoard[y][x]}
                     onClick={() => this.move(x + 1, y + 1)}></Cell>)
             }

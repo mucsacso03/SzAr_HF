@@ -1,7 +1,6 @@
+import { Box, Button, Container } from '@material-ui/core';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-// import Button from '@mui/material/Button';
-import { Typography, Button, ButtonGroup, Container, Box } from '@material-ui/core'
 
 export class Menu extends Component {
     render() {
@@ -10,7 +9,7 @@ export class Menu extends Component {
                 <div>
                     <Box m={2} pt={3}>
                         <Button style={{ maxWidth: '200px', maxHeight: '100px', minWidth: '200px', minHeight: '100px' }} 
-                        variant="contained" size="large"><Link to="/game" class="button">Play</Link></Button>
+                        variant="contained" size="large"><Link to="/game" className="button">Play</Link></Button>
                     </Box>
                 </div>
 
@@ -18,7 +17,7 @@ export class Menu extends Component {
                     <Box m={2} pt={3}>
                         <Button
                             style={{ maxWidth: '200px', maxHeight: '100px', minWidth: '200px', minHeight: '100px' }}
-                            variant="contained"><Link to="/scoreboard" class="button">Scoreboard</Link></Button>
+                            variant="contained"><Link to="/leaderboard" className="button">Leaderboard</Link></Button>
                     </Box>
                 </div>
 
@@ -26,7 +25,7 @@ export class Menu extends Component {
                     <Box m={2} pt={3}>
                         <Button
                             style={{ maxWidth: '200px', maxHeight: '100px', minWidth: '200px', minHeight: '100px' }}
-                            variant="contained"><Link to="/" class="button">Menu</Link></Button>
+                            variant="contained"><Link to="/" className="button">Menu</Link></Button>
                     </Box>
                 </div>
 

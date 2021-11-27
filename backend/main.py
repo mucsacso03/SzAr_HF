@@ -1,14 +1,11 @@
 import json
-import string
-from random import SystemRandom
-
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 from flask_restful import Api, Resource
 
 from datab.database import Leaderboard_Entry
 from datab.shared import db
 from game import game_instance
-from flask_cors import CORS
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -21,7 +18,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db.app = app
 db.init_app(app)
 
-db.drop_all()
+# db.drop_all()
 db.create_all()
 
 Games = []
@@ -32,7 +29,7 @@ def delete_game_instance(id):
         G = [x for x in Games if x.id == id][0]
         # print(Games)
         Games.remove(G)
-        # print(Games)  
+        # print(Games)
 
     except Exception as e:
         print(e)
@@ -48,7 +45,17 @@ class DeleteGame(Resource):
 
 class Leaderboard(Resource):
     def get(self):
-        return str(Leaderboard_Entry.query.all())
+        q = Leaderboard_Entry.query.all()
+        files = {}
+        num = 1
+
+        for row in q:
+            files[num] = {
+                "username": row.username,
+                "score": row.score
+            }
+            num += 1
+        return jsonify(files)
 
 
 class Move(Resource):
@@ -74,7 +81,7 @@ class Move(Resource):
                 return jsonify({"won": 'robot'})
             else:
                 return jsonify({'won': '',
-                'field': G.get_field()})
+                                'field': G.get_field()})
 
         except Exception as e:
             print("ERROR")
@@ -96,7 +103,7 @@ class NewGame(Resource):
         G = [x for x in Games if x.id == id][0]
         return(G.get_field())
         # return json.dumps({"data" : G.get_field()})
-        return json.dumps(int(id)) # ezt is, meg a fentit is kéne
+        return json.dumps(int(id))  # ezt is, meg a fentit is kéne
 
 
 api.add_resource(Move, "/move")
