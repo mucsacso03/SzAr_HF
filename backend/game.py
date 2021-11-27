@@ -1,7 +1,7 @@
 import datetime as dt
 from datetime import datetime
 from random import randint
-import threading
+
 import numpy as np
 
 from datab.database import Leaderboard_Entry
@@ -16,7 +16,6 @@ class game_instance():
         self.username = username
         self.step_counter = 0
         self.delete_time = datetime.now() + dt.timedelta(minutes=15)
-
 
     def get_field(self):
         return self.field.tolist()

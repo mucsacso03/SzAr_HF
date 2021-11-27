@@ -1,4 +1,3 @@
-import json
 import string
 import threading
 import time
@@ -144,7 +143,6 @@ def generate_id():
         game_id = ''.join(SystemRandom().choice(string.digits) for _ in range(4))
         if find_game_in_games_list(game_id) is None:
             return int(game_id)
-
 
 
 class NewGame(Resource):
