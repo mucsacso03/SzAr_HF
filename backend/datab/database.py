@@ -1,4 +1,4 @@
-from backend.datab.shared import db
+from datab.shared import db
 
 
 class Leaderboard_Entry(db.Model):

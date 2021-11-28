@@ -6,3 +6,4 @@ backend/test.db
 backend/datab/__pycache__/database.cpython-37.pyc
 backend/__pycache__/game.cpython-37.pyc
 .gitignore
+

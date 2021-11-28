@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { TableCell, TableRow, Typography } from '@material-ui/core'
 import React, { Component } from 'react'
 
 type ScoreProps = {
@@ -11,12 +11,14 @@ type ScoreProps = {
 export class Score extends Component<ScoreProps> {
     render() {
         return (
-            <div>
-                <Typography variant="h6">
-                    {this.props.no}. {this.props.username} {this.props.score}
-                </Typography>
+            // <div>
+            <TableRow>
+                <TableCell align="right">{this.props.no}.</TableCell>
+                <TableCell align="center">{this.props.username}</TableCell>
+                <TableCell align="left">{this.props.score}</TableCell>
+            </TableRow>
 
-            </div>
+            // </div>
         )
     }
 }

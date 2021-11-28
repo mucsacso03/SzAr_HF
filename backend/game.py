@@ -17,7 +17,7 @@ class game_instance():
         self.step_counter = 0
         self.delete_time = datetime.now() + dt.timedelta(minutes=15)
 
-    def get_field(self):
+    def get_board(self):
         return self.field.tolist()
 
     def robot_move(self):

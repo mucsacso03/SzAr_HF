@@ -23,7 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db.app = app
 db.init_app(app)
 
-# db.drop_all()
+db.drop_all()
 db.create_all()
 
 Games = []
@@ -64,33 +64,8 @@ def game_deleting_thread(id):
         time.sleep(5)
 
 
-# class DeleteGame(Resource):
-#     def post(self):
-#         content = request.get_json()
-#         id = content['id']
-#         delete_game_instance(id)
-#         return str(200)
-
-
 class Leaderboard(Resource):
     def get(self):
-        # entry1 = Leaderboard_Entry(username='username', score=1)
-        # entry2 = Leaderboard_Entry(username='rname', score=5)
-        # entry3 = Leaderboard_Entry(username='username', score=3)
-        # entry4 = Leaderboard_Entry(username='username', score=30)
-        # entry5 = Leaderboard_Entry(username='username', score=21)
-        # entry6 = Leaderboard_Entry(username='username', score=7)
-        # entry7 = Leaderboard_Entry(username='username', score=13)
-        # entry8 = Leaderboard_Entry(username='username', score=18)
-        # db.session.add(entry1)
-        # db.session.add(entry2)
-        # db.session.add(entry3)
-        # db.session.add(entry4)
-        # db.session.add(entry5)
-        # db.session.add(entry6)
-        # db.session.add(entry7)
-        # db.session.add(entry8)
-        # db.session.commit()
         q = Leaderboard_Entry.query.all()
         q.sort(key=lambda x: x.score, reverse=False)
         q = q[:10]
@@ -117,19 +92,26 @@ class Move(Resource):
             print("REQUEST:")
             print(request.get_json())
 
+            print('id:')
+            print(id)
             game = find_game_in_games_list(id)
             victory, robot_v = game.move(x, y)
+            print('victory?')
+            print(game.username)
+            print(find_game_in_games_list)
             if victory:
                 username = game.username
                 delete_game_instance(id)
-                return jsonify({"won": username})
+                return jsonify({'won': username,
+                                'board': game.get_board()})
 
             elif robot_v:
                 delete_game_instance(id)
-                return jsonify({"won": 'robot'})
+                return jsonify({'won': 'robot',
+                                'board': game.get_board()})
             else:
                 return jsonify({'won': '',
-                                'field': game.get_field()})
+                                'board': game.get_board()})
 
         except Exception as e:
             print("ERROR")
@@ -158,11 +140,12 @@ class NewGame(Resource):
         # Itt is vissszaküldjük a pályát, hogy egyszerűbb dolgunk legyen
         game = find_game_in_games_list(game_id)
 
-        return jsonify({'field': game.get_field(),
+        
+        return jsonify({'board': game.get_board(),
                         'game_id': int(game_id)})
 
-        # return (game.get_field())
-        # # return json.dumps({"data" : game.get_field()})
+        # return (game.get_board())
+        # # return json.dumps({"data" : game.get_board()})
         # return json.dumps(int(game_id))  # ezt is, meg a fentit is kéne
 
 
