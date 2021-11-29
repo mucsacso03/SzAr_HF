@@ -8,7 +8,7 @@ from datab.database import Leaderboard_Entry
 from datab.shared import db
 
 
-class game_instance():
+class game_instance:
 
     def __init__(self, id, username):
         self.field = np.zeros((WIDTH, HEIGHT), dtype=int)
@@ -50,7 +50,7 @@ class game_instance():
         for c in range(0, WIDTH):
             list_of_angles.append(self.field[:, c])
 
-        sublist = [1, 1]  # TODO: 5 db 1esre visszairni
+        sublist = [1, 1, 1, 1, 1]
         victory = check_grid(sublist, list_of_angles)
         sublist = [2, 2, 2, 2, 2]
         robot_victory = check_grid(sublist, list_of_angles)
