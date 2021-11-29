@@ -11,14 +11,12 @@ type ScoreProps = {
 export class Score extends Component<ScoreProps> {
     render() {
         return (
-            // <div>
             <TableRow>
                 <TableCell align="right">{this.props.no}.</TableCell>
                 <TableCell align="center">{this.props.username}</TableCell>
                 <TableCell align="left">{this.props.score}</TableCell>
             </TableRow>
 
-            // </div>
         )
     }
 }

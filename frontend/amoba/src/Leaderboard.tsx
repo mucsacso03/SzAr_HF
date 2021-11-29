@@ -42,18 +42,12 @@ export class Leaderboard extends Component<LeaderboardProps, LeaderboardStates> 
     }
 
     refreshLeaderboard(scores: any) {
-        console.log(scores[1])
-        console.log(scores[2])
         let array3 = Array<ScoreType>()
-        console.log(Object.keys(scores).length)
 
         for (let i = 1; i <= Object.keys(scores).length; i++) {
             array3.push(scores[i])
         }
 
-
-        console.log(array3)
-        console.log(this.state.scoreData.length)
         this.setState({ scoreData: array3 });
     }
 

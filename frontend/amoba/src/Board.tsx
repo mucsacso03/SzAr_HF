@@ -81,7 +81,6 @@ export default class Board extends Component<BoardProps, BoardState> {
             .catch(error => console.log('error', error));
     }
 
-    // getBoard(x: number, y:number, id: number) {
     move(x: number, y: number, game_id: number) {
         var raw = JSON.stringify({
             "x": x,

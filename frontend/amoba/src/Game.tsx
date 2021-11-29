@@ -23,7 +23,6 @@ export class Game extends Component<{}, GameState> {
 
     handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(this.state.username)
 
         if (this.state.username === '') {
             this.setState({ nameError: true })
@@ -48,8 +47,7 @@ export class Game extends Component<{}, GameState> {
                     variant="outlined"
                     color="secondary"
                     sx={{mr:2}}
-                    // required
-                    // error={this.state.nameError}
+
                 />
                 <Button color="error" variant="contained">Submit</Button>
                 </Box>
