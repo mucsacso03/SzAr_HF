@@ -1,6 +1,6 @@
-import { TextField, Typography } from '@material-ui/core';
 import React, { Component } from 'react'
 import Cell from './Cell'
+import Typography from '@mui/material/Typography';
 
 
 
@@ -25,12 +25,10 @@ export default class Board extends Component<BoardProps, BoardState> {
 
     constructor(props: BoardProps) {
         super(props);
-        console.log('CONSTRUCT')
         this.state = { actBoard: [], winner: "", game_id: 0, };
     }
 
     componentDidMount() {
-        console.log('DIDMOUNT')
         this.newGame();
     }
 
@@ -40,24 +38,14 @@ export default class Board extends Component<BoardProps, BoardState> {
     }
 
     refreshBoard = (boardResponse: BoardResponse): void => {
-        console.log(boardResponse)
-        console.log(boardResponse.game_id)
-        console.log('refreshen belül')
-        console.log(boardResponse.game_id)
-        console.log(this.state.game_id)
         if (boardResponse.game_id) {
 
             this.setState({ game_id: boardResponse.game_id });
         }
         let refreshedBoard = boardResponse.board
-
-        console.log('WON:')
         let won = boardResponse.won
-        console.log(won)
-        console.log("refreshboard:")
-        console.log(refreshedBoard)
+
         if (won) {
-            console.log('!refreshedBoard')
             if (won === this.props.username) {
                 this.setState({ winner: this.props.username });
             }
@@ -74,8 +62,6 @@ export default class Board extends Component<BoardProps, BoardState> {
 
 
     newGame() {
-        console.log("NEWGAME")
-        console.log(this.props.username)
         var raw = JSON.stringify({
             "username": this.props.username
         });
@@ -97,8 +83,6 @@ export default class Board extends Component<BoardProps, BoardState> {
 
     // getBoard(x: number, y:number, id: number) {
     move(x: number, y: number, game_id: number) {
-        console.log("MOVE")
-        console.log(game_id)
         var raw = JSON.stringify({
             "x": x,
             "y": y,
@@ -120,6 +104,16 @@ export default class Board extends Component<BoardProps, BoardState> {
             .catch(error => console.log('error', error));
     }
 
+    formatCell(value:number){
+        if(value===0){
+            return "";
+        }
+        if(value===1){
+            return "X";
+        }
+        return "O";
+    }
+
 
     render() {
 
@@ -132,7 +126,7 @@ export default class Board extends Component<BoardProps, BoardState> {
         if (this.state.winner !== "") {
             return (
                 <div className="game">
-                    <Typography variant="h2">{this.state.winner} wins</Typography>
+                    <Typography sx={{ mt: 6, mb: 3 }} variant="h2">{this.state.winner} wins</Typography>
 
                 </div>
             )
@@ -141,7 +135,7 @@ export default class Board extends Component<BoardProps, BoardState> {
         for (let y = 0; y < this.numRows; y++) {
             let row = []
             for (let x = 0; x < this.numRows; x++) {
-                row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue={this.state.actBoard[y][x]}
+                row.push(<Cell x={x} y={y} key={this.getKey(x, y)} actValue={this.formatCell(this.state.actBoard[y][x])}
                     onClick={() => this.move(x + 1, y + 1, this.state.game_id)}></Cell>)
             }
             cells.push(<div key={y}>{row}</div>)

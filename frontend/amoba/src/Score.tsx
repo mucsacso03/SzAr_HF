@@ -1,4 +1,4 @@
-import { TableCell, TableRow, Typography } from '@material-ui/core'
+import { TableCell, TableRow, Typography } from '@mui/material'
 import React, { Component } from 'react'
 
 type ScoreProps = {

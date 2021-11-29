@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.12.3",
+    "@mui/material": "^4.12.3",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -42,7 +42,12 @@
     ]
   },
   "devDependencies": {
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
     "@material-ui/system": "^4.12.1",
+    "@mui/material": "^5.2.1",
+    "@types/material-ui": "^0.21.12",
+    "@types/react-tap-event-plugin": "0.0.31",
     "dotenv": "^10.0.0",
     "http-proxy-middleware": "^2.0.1",
     "react-router-dom": "^5.3.0"

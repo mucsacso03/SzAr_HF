@@ -50,7 +50,7 @@ class game_instance():
         for c in range(0, WIDTH):
             list_of_angles.append(self.field[:, c])
 
-        sublist = [1, 1]  # TODO: 5 db 1esre visszairni
+        sublist = [1, 1,1,1,1]  # TODO: 5 db 1esre visszairni
         victory = check_grid(sublist, list_of_angles)
         sublist = [2, 2, 2, 2, 2]
         robot_victory = check_grid(sublist, list_of_angles)

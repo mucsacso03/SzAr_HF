@@ -41,3 +41,7 @@
   color: red;
   width: 400px;
 }
+
+.MuiButton-root {
+  border-radius: 8px;
+} 

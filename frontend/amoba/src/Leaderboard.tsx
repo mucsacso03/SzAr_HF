@@ -1,4 +1,4 @@
-import { Paper, Table, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Paper, Table, TableCell, Typography, TableContainer, TableHead, TableRow } from '@mui/material';
 import { width } from '@material-ui/system';
 import React, { Component } from 'react';
 import Navbar from './Navbar';
@@ -81,8 +81,7 @@ export class Leaderboard extends Component<LeaderboardProps, LeaderboardStates> 
         }
 
         let table= []
-        // @ts-ignore
-        table.push(<Table  aria-label="simple table">{table_body}{table_head}</Table>)
+        table.push(<Table   aria-label="simple table">{table_body}{table_head}</Table>)
         
         let tableContainer = []
         tableContainer.push(<TableContainer component={Paper}>{table}</TableContainer>
@@ -90,6 +89,7 @@ export class Leaderboard extends Component<LeaderboardProps, LeaderboardStates> 
         return (
             <div>
                 <Navbar />
+                <Typography sx={{ m: 3 }} variant="h4">Leaderboard</Typography>
                 {tableContainer}
             </div>
         )
