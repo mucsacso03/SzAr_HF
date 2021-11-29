@@ -14,16 +14,14 @@ from game import game_instance
 
 app = Flask(__name__)
 cors = CORS(app)
-# cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 CORS(app)
 api = Api(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-# db = SQLAlchemy(app)
 db.app = app
 db.init_app(app)
 
-db.drop_all()
+# db.drop_all()
 db.create_all()
 
 Games = []
@@ -39,10 +37,7 @@ def find_game_in_games_list(id):
 def delete_game_instance(id):
     try:
         g = find_game_in_games_list(id)
-        # print(Games)
         Games.remove(g)
-        # print(Games)
-
     except Exception as e:
         print(e)
 
@@ -55,7 +50,6 @@ def delete_inactive_game(id):
         delete_game_instance(id)
         return True
     else:
-
         return False
 
 
@@ -92,19 +86,14 @@ class Move(Resource):
             print("REQUEST:")
             print(request.get_json())
 
-            print('id:')
-            print(id)
             game = find_game_in_games_list(id)
             victory, robot_v = game.move(x, y)
-            print('victory?')
-            print(game.username)
-            print(find_game_in_games_list)
+
             if victory:
                 username = game.username
                 delete_game_instance(id)
                 return jsonify({'won': username,
                                 'board': game.get_board()})
-
             elif robot_v:
                 delete_game_instance(id)
                 return jsonify({'won': 'robot',
@@ -116,7 +105,6 @@ class Move(Resource):
         except Exception as e:
             print("ERROR")
             print(e)
-            # return e TODO: only for debug
             return str(404)
 
 
@@ -133,20 +121,12 @@ class NewGame(Resource):
         username = content['username']
         global Games
         game_id = generate_id()
-        # game_id = 123  # TODO: only for debug
         Games.append(game_instance(int(game_id), username))
         threading.Thread(target=game_deleting_thread, args=[game_id], daemon=True).start()
 
-        # Itt is vissszaküldjük a pályát, hogy egyszerűbb dolgunk legyen
         game = find_game_in_games_list(game_id)
-
-        
         return jsonify({'board': game.get_board(),
                         'game_id': int(game_id)})
-
-        # return (game.get_board())
-        # # return json.dumps({"data" : game.get_board()})
-        # return json.dumps(int(game_id))  # ezt is, meg a fentit is kéne
 
 
 api.add_resource(Move, "/move")
